@@ -13,7 +13,7 @@ bash <(curl --silent https://raw.githubusercontent.com/kerkenit/pimailprint/refs
 
 ## Configure
 ```sh
-nano /home/$(whoami)/pimailprint
+nano /home/$(whoami)/pimailprint/procmail.conf
 ```
 
 ## Create Cronjob
