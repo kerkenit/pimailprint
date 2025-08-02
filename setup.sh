@@ -55,6 +55,8 @@ else
 	cd /home/$(whoami)/pimailprint
 	git pull origin main
 fi
+elevate_cmd mkdir -p /home/$(whoami)/pimailprint/attachments
+elevate_cmd mkdir -p /home/$(whoami)/pimailprint/maildata
 elevate_cmd touch /var/log/printmail.log
 elevate_cmd chown -R $(whoami):$(whoami) /home/$(whoami)/pimailprint /var/log/printmail.log
 elevate_cmd chmod +x /home/$(whoami)/pimailprint/printmail.sh
@@ -85,6 +87,7 @@ else
 	echo "Configuration file /home/$(whoami)/pimailprint/fetchmail.conf already exists."
 	echo "If you want to change the configuration, please edit it manually."
 fi
+elevate_cmd chown $(whoami):$(whoami) -R /home/$(whoami)/pimailprint
 elevate_cmd cupsctl --remote-admin --remote-any --share-printers
 elevate_cmd usermod -a -G lpadmin $(whoami)
 elevate_cmd service cups restart
