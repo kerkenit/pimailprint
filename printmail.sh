@@ -30,7 +30,7 @@ if ( set -o noclobber; echo "$$" > "$lockfile") 2> /dev/null; then
 	for i in $MAILDIR/new/*
 	do
 		echo "Processing: $i" | tee -a $LOGFILE
-		result=$(uudeview $i -i -p $ATTACH_DIR/)
+		result=$(uudeview $i -i -p $ATTACH_DIR/ 2>&1 >/dev/null)
 		if [[ $result == "Note: No encoded data found in $i" ]]; then
 			java -jar emailconverter.jar --output-filepath $ATTACH_DIR/$(basename $i).pdf  $i
 		fi
