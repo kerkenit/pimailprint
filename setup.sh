@@ -55,6 +55,7 @@ else
 	cd /home/$(whoami)/pimailprint
 	git pull origin main
 fi
+elevate_cmd wget -O /home/$(whoami)/pimailprint/emailconverter.jar https://github.com/nickrussler/email-to-pdf-converter/releases/download/3.0.0/emailconverter-3.0.0-all.jar
 elevate_cmd mkdir -p /home/$(whoami)/pimailprint/attachments
 elevate_cmd mkdir -p /home/$(whoami)/pimailprint/maildata
 elevate_cmd touch /var/log/printmail.log
