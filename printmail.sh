@@ -29,9 +29,9 @@ if ( set -o noclobber; echo "$$" > "$lockfile") 2> /dev/null; then
 	shopt -s nullglob
 	for i in $MAILDIR/new/*
 	do
-		echo "Processing : $i" | tee -a $LOGFILE
+		echo "Processing: $i" | tee -a $LOGFILE
 		result=$(uudeview $i -i -p $ATTACH_DIR/)
-		if [ $result == "Note: No encoded data found in $i" ]; then
+		if [[ $result == "Note: No encoded data found in $i" ]]; then
 			java -jar emailconverter.jar --output-filepath $ATTACH_DIR/$(basename $i).pdf  $i
 		fi
 		# process file attachments with space
