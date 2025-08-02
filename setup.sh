@@ -92,5 +92,5 @@ elevate_cmd cupsctl --remote-admin --remote-any --share-printers
 elevate_cmd usermod -a -G lpadmin $(whoami)
 elevate_cmd service cups restart
 ip_address=$(hostname -I | awk '{print $1}')
-echo "You can now configure your CUPS printer by visiting https://$ip_address:631"
+echo -e "You can now configure your CUPS printer by opening https://$ip_address:631/admin in your web browser.\n"
 echo "You can log in with user $(whoami) and your password."
