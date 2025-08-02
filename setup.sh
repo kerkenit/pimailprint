@@ -44,7 +44,7 @@ fi
 
 elevate_cmd apt update
 elevate_cmd apt upgrade -y
-elevate_cmd apt install -y libreoffice hplip rubygems build-essential default-jre libreoffice-java-common fonts-crosextra-carlito fonts-crosextra-caladea ttf-mscorefonts-installer unoconv cups-filters cups-* procmail fetchmail uudeview
+elevate_cmd apt install -y libreoffice hplip rubygems build-essential default-jre libreoffice-java-common fonts-crosextra-carlito fonts-crosextra-caladea ttf-mscorefonts-installer unoconv cups-filters cups-* procmail fetchmail uudeview mpack wkhtmltopdf
 elevate_cmd apt autoremove -y
 
 elevate_cmd mkdir -p /home/$(whoami)

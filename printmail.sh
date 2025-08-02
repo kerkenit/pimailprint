@@ -30,7 +30,10 @@ if ( set -o noclobber; echo "$$" > "$lockfile") 2> /dev/null; then
 	for i in $MAILDIR/new/*
 	do
 		echo "Processing : $i" | tee -a $LOGFILE
-		uudeview $i -i -p $ATTACH_DIR/
+		result=$(uudeview $i -i -p $ATTACH_DIR/)
+		if [ $result == "Note: No encoded data found in $i" ]; then
+			java -jar emailconverter-3.0.0-all.jar --output-filepath $ATTACH_DIR/$(basename $i).pdf  $i
+		fi
 		# process file attachments with space
 		cd $ATTACH_DIR
 		# patch to remove spaces in filenames
