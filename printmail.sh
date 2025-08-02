@@ -41,6 +41,51 @@ if ( set -o noclobber; echo "$$" > "$lockfile") 2> /dev/null; then
 			fi
 		done
 
+		# patch to convert PDF files to lowercase
+		for f in $ATTACH_DIR/*.PDF; do mv $f ${f%.*}.pdf; done
+
+		# patch to convert DOCX files to lowercase
+		for f in $ATTACH_DIR/*.DOCX; do mv $f ${f%.*}.docx; done
+
+		# patch to convert DOC files to lowercase
+		for f in $ATTACH_DIR/*.DOC; do mv $f ${f%.*}.doc; done
+
+		cd $BASEDIR
+		# end of patch
+		echo "Printing PDFs" | tee -a $LOGFILE
+
+		# convert DOC and DOCX files to PDF and print them
+		for f in $ATTACH_DIR/*.{doc,docx}; do
+			# check if file exists
+			if [ ! -f "$f" ]; then
+				continue
+			fi
+			echo "Converting and printing: $f" | tee -a $LOGFILE
+			# convert DOC and DOCX files to PDF
+			libreoffice --headless --convert-to pdf $f --outdir $ATTACH_DIR
+			# check if conversion was successful
+			x=${f%.*}.pdf
+			# if the converted file exists, print it and delete the original
+			if [ -f "$x" ]; then
+				echo "Deleting original file: $f" | tee -a $LOGFILE
+				rm $f | tee -a $LOGFILE
+			fi
+		done
+
+		# print all PDF files
+		for x in $ATTACH_DIR/*.pdf; do
+			echo "Printing : $x" | tee -a $LOGFILE
+			# Check if the command lpr is successful and remove the file if it is
+			if { lpr $x; }; then
+				echo "Printed successfully: $x" | tee -a $LOGFILE
+				rm $x | tee -a $LOGFILE
+			else
+				echo "Failed to print: $x" | tee -a $LOGFILE
+			fi
+		done
+
+
+
 		# delete mail
 		if [ -t 0 ]; then
 			echo "Skip deleting mail: $i"
@@ -48,49 +93,6 @@ if ( set -o noclobber; echo "$$" > "$lockfile") 2> /dev/null; then
 			# remove the mail from the folder
 			echo "Deleting mail: $i" | tee -a $LOGFILE
 			rm $i | tee -a $LOGFILE
-		fi
-	done
-
-	# patch to convert PDF files to lowercase
-	for f in $ATTACH_DIR/*.PDF; do mv $f ${f%.*}.pdf; done
-
-	# patch to convert DOCX files to lowercase
-	for f in $ATTACH_DIR/*.DOCX; do mv $f ${f%.*}.docx; done
-
-	# patch to convert DOC files to lowercase
-	for f in $ATTACH_DIR/*.DOC; do mv $f ${f%.*}.doc; done
-
-	cd $BASEDIR
-	# end of patch
-	echo "Printing PDFs" | tee -a $LOGFILE
-
-	# convert DOC and DOCX files to PDF and print them
-	for f in $ATTACH_DIR/*.{doc,docx}; do
-		# check if file exists
-		if [ ! -f "$f" ]; then
-			continue
-		fi
-		echo "Converting and printing : $f" | tee -a $LOGFILE
-		# convert DOC and DOCX files to PDF
-		libreoffice --headless --convert-to pdf $f --outdir $ATTACH_DIR
-		# check if conversion was successful
-		x=${f%.*}.pdf
-		# if the converted file exists, print it and delete the original
-		if [ -f "$x" ]; then
-			echo "Deleting original file : $f" | tee -a $LOGFILE
-			rm $f | tee -a $LOGFILE
-		fi
-	done
-
-	# print all PDF files
-	for x in $ATTACH_DIR/*.pdf; do
-		echo "Printing : $x" | tee -a $LOGFILE
-		# Check if the command lpr is successful and remove the file if it is
-		if { lpr $x; } then
-			echo "Printed successfully : $x" | tee -a $LOGFILE
-			rm $x | tee -a $LOGFILE
-		else
-			echo "Failed to print : $x" | tee -a $LOGFILE
 		fi
 	done
 
